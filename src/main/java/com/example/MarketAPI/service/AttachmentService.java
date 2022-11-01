@@ -80,7 +80,7 @@ public class AttachmentService {
         return attachmentRepository.findAttachmentByHashId(hashId);
     }
 
-    public Result deleteAttachmentById(String hashId){
+    public boolean deleteAttachmentById(String hashId){
         try {
 
             Attachment attachment= attachmentRepository.findAttachmentByHashId(hashId);
@@ -88,10 +88,10 @@ public class AttachmentService {
             File file=new File(attachment.getLink());
             System.out.println( file.delete());
             attachmentRepository.deleteById(attachment.getId());
-            return new Result("sucsess",true,"fail deleted",null);
+            return  true;
         }catch (Exception e){
             log.error(e.getMessage());
-            return new Result("fail",false,null,e.getMessage());
+            return false;
         }
 
     }

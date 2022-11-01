@@ -5,6 +5,7 @@ import com.example.MarketAPI.model.Result;
 import com.example.MarketAPI.payload.ProductPayload;
 import com.example.MarketAPI.repository.AttachmentRepository;
 import com.example.MarketAPI.repository.ProductRepository;
+import com.example.MarketAPI.service.AttachmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,10 @@ import java.io.File;
 public class ProductServiceImpl implements com.example.MarketAPI.service.ProductService {
 
     private final ProductRepository productRepository;
-    private final AttachmentRepository attachmentRepository;
 
+    private final AttachmentService attachmentService;
+
+    private final AttachmentRepository attachmentRepository;
     @Override
     public Result add(ProductPayload productPayload) {
         try {
@@ -40,12 +43,9 @@ public class ProductServiceImpl implements com.example.MarketAPI.service.Product
     public Result delete(Long id) {
         try {
             Product product = productRepository.findById(id).orElseThrow();
-            String link=product.getAttachment().getLink();
-
-            File file=new File(link);
-            file.delete();
+            String hashId=product.getAttachment().getHashId();
             productRepository.delete(product);
-            attachmentRepository.delete(product.getAttachment());
+            attachmentService.deleteAttachmentById(hashId);
             return new Result("succsess",true,"file deleted",null);
         }catch (Exception e){
             log.error(e.getMessage());
