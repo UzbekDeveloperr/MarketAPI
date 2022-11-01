@@ -22,4 +22,9 @@ public class ProductController {
         Result delete = productService.delete(id);
         return delete;
     }
+
+    @PutMapping("/edit/{id}")
+    public Result edit(@RequestBody ProductPayload productPayload,@PathVariable Long id){
+        return productService.edit(productPayload,id);
+    }
 }

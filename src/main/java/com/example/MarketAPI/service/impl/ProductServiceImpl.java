@@ -18,9 +18,8 @@ import java.io.File;
 public class ProductServiceImpl implements com.example.MarketAPI.service.ProductService {
 
     private final ProductRepository productRepository;
-
     private final AttachmentService attachmentService;
-
+    private final Result result;
     private final AttachmentRepository attachmentRepository;
     @Override
     public Result add(ProductPayload productPayload) {
@@ -32,10 +31,10 @@ public class ProductServiceImpl implements com.example.MarketAPI.service.Product
                     .attachment(attachmentRepository.findAttachmentByHashId(productPayload.getHashId()))
                     .build();
             productRepository.save(product);
-            return new Result("Succsess",true,product,null);
+            return result.success(product);
         }catch (Exception e) {
             log.error(e.getMessage());
-            return new Result("fail",false,null,e.getMessage());
+            return result.failed(e.getMessage());
         }
     }
 
@@ -46,16 +45,32 @@ public class ProductServiceImpl implements com.example.MarketAPI.service.Product
             String hashId=product.getAttachment().getHashId();
             productRepository.delete(product);
             attachmentService.deleteAttachmentById(hashId);
-            return new Result("succsess",true,"file deleted",null);
+            return result.success("file deleted");
         }catch (Exception e){
             log.error(e.getMessage());
-            return new Result("fail",false,null,e.getMessage());
+            return result.failed(e.getMessage());
         }
     }
 
     @Override
-    public Result edit(ProductPayload productPayload) {
-        return null;
+    public Result edit(ProductPayload productPayload,Long id) {
+        try {
+
+            Product product=Product.builder()
+                    .id(id)
+                    .name(productPayload.getName())
+                    .description(productPayload.getDescription())
+                    .price(productPayload.getPrice())
+                    .attachment(attachmentRepository.findAttachmentByHashId(productPayload.getHashId()))
+                    .build();
+
+            productRepository.save(product);
+
+            return result.success(product);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return result.failed(e.getMessage());
+        }
     }
 
     @Override

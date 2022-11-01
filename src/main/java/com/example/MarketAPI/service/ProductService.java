@@ -7,7 +7,7 @@ public interface ProductService {
 
     Result add(ProductPayload productPayload);
     Result delete(Long id);
-    Result edit(ProductPayload productPayload);
+    Result edit(ProductPayload productPayload,Long id);
     Result findById(Long id);
     Result findAll();
 
