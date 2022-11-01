@@ -1,8 +1,8 @@
 package com.example.MarketAPI.conf;
 
+import com.example.MarketAPI.model.Result;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uz.global.marketbackend.model.Result;
 @Configuration
 public class Config {
     @Bean
